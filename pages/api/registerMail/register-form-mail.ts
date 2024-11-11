@@ -1,4 +1,3 @@
-
 import type { NextApiRequest, NextApiResponse } from 'next';
 import nodemailer from 'nodemailer';
 import { parseForm, config } from '@/pages/api/utils/parseForm';
@@ -15,10 +14,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { fields } = await parseForm(req);
     console.log('Form data parsed:', fields);
 
-    const { name, email, message } = fields;
+    const { 
+      name, 
+      email, 
+      phoneNumber, 
+      courseTitle,
+      courseDate,
+      courseDuration,
+      coursePrice 
+    } = fields;
 
-    if (!name || !email || !message) {
-      console.log('Missing required fields:', { name, email, message });
+    if (!name || !email || !phoneNumber) {
+      console.log('Missing required fields:', { name, email, phoneNumber });
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
@@ -37,14 +44,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await transporter.sendMail({
       from: process.env.FROM_EMAIL,
       to: 'growtechie.ind@gmail.com',
-      subject: 'New member is interested in the seminar',
-      text: `New Seminar Registration:\nName: ${name}\nEmail: ${email}\nSeminar Topic: ${message}`,
+      subject: `New Registration: ${courseTitle}`,
+      text: `
+        New Course Registration:
+        Course: ${courseTitle}
+        Name: ${name}
+        Email: ${email}
+        Phone Number: ${phoneNumber}
+        Course Date: ${courseDate}
+        Course Duration: ${courseDuration}
+        Course Price: ${coursePrice}
+      `,
       html: `
         <div style="font-family: Arial, sans-serif; color: #333;">
-          <h2 style="color: #007bff;">New Seminar Registration</h2>
+          <h2 style="color: #007bff;">New Course Registration</h2>
+          <h3>Course Details:</h3>
+          <p>Course: <strong>${courseTitle}</strong></p>
+          <p>Date: <strong>${courseDate}</strong></p>
+          <p>Duration: <strong>${courseDuration}</strong></p>
+          <p>Price: <strong>${coursePrice}</strong></p>
+          <h3>Student Details:</h3>
           <p>Name: <strong>${name}</strong></p>
           <p>Email: <strong>${email}</strong></p>
-          <p>Seminar Topic: <strong>${message}</strong></p>
+          <p>Phone Number: <strong>${phoneNumber}</strong></p>
         </div>
       `,
     });
@@ -53,12 +75,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await transporter.sendMail({
       from: process.env.FROM_EMAIL,
       to: email,
-      subject: `Welcome to Growtechie's ${message} Seminar!`,
+      subject: `Welcome to ${courseTitle} - Growtechie`,
       text: `
         Dear ${name},
 
-        Thank you for your interest in the ${message} seminar.
+        Thank you for registering for ${courseTitle}!
+
+        Course Details:
+        Start Date: ${courseDate}
+        Duration: ${courseDuration}
+        Investment: ${coursePrice}
+
         We're excited to have you join us and look forward to your participation.
+        We will contact you shortly on your provided phone number: ${phoneNumber}
 
         If you have any questions, please don't hesitate to reach out.
 
@@ -67,9 +96,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       `,
       html: `
         <div style="font-family: Arial, sans-serif; color: #333;">
-          <h2 style="color: #007bff;">Welcome to Growtechie's ${message} Seminar!</h2>
+          <h2 style="color: #007bff;">Welcome to ${courseTitle}!</h2>
           <p>Dear ${name},</p>
-          <p>Thank you for your interest in the ${message} seminar. We're excited to have you join us and look forward to your participation.</p>
+          <p>Thank you for registering for our course. We're excited to have you join us!</p>
+          
+          <h3>Course Details:</h3>
+          <ul style="list-style: none; padding-left: 0;">
+            <li>📅 Start Date: <strong>${courseDate}</strong></li>
+            <li>⏱️ Duration: <strong>${courseDuration}</strong></li>
+            <li>💰 Investment: <strong>${coursePrice}</strong></li>
+          </ul>
+
+          <p>We will contact you shortly on your provided phone number: <strong>${phoneNumber}</strong></p>
           <p>If you have any questions, please don't hesitate to reach out.</p>
           <br>
           <p style="font-style: italic;">Best regards,<br>Growtechie Team</p>

@@ -26,7 +26,7 @@ export default function CourseCertification() {
             <p className="text-gray-400">
               While we prioritize knowledge over certification, you'll receive a participant certificate upon successful completion of the course. This certificate, though not accredited, serves as a testament to your dedication and newly acquired skills.
             </p>
-            <motion.div
+            {/* <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="inline-block"
@@ -34,7 +34,7 @@ export default function CourseCertification() {
               <button className="bg-white text-[#0c0c0c] px-6 py-3 rounded-full font-semibold hover:bg-gray-200 transition-colors duration-300">
                 Learn More About Certification
               </button>
-            </motion.div>
+            </motion.div> */}
           </motion.div>
 
           <motion.div

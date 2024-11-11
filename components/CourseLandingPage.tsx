@@ -24,7 +24,6 @@ export default function CourseLandingPage({ course }: Course) {
       
       {course.map((courseItem) => (
         <div key={courseItem.title} className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
-          {length}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
